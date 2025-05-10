@@ -1,0 +1,12 @@
+[submodule "CXXRitoFile/zstd"]
+	path = CXXRitoFile/third-party/zstd
+	url = https://github.com/facebook/zstd
+[submodule "CXXRitoFile/zlib"]
+	path = CXXRitoFile/third-party/zlib
+	url = https://github.com/madler/zlib/
+[submodule "CXXRitoFile/gzip-hpp"]
+	path = CXXRitoFile/third-party/gzip-hpp
+	url = https://github.com/mapbox/gzip-hpp
+[submodule "CXXRitoFile/third-party/xxhash"]
+	path = CXXRitoFile/third-party/xxhash
+	url = https://github.com/stbrumme/xxhash

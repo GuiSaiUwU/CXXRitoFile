@@ -1,0 +1,124 @@
+﻿#include <iostream>
+#include <filesystem>
+#include <unordered_map>
+#include "include/skn.hpp"
+#include "include/wad.hpp"
+
+
+
+#define LOCK_AND_RETURN(v) \
+	std::cin.get(); \
+	return v
+
+
+namespace fs = std::filesystem;
+/* std::cerr for debugs and errors uwu */
+/* std::cout for infos owo */
+
+
+void test_wad() {
+	const std::string file_path = "C:\\Users\\GuiSai\\Desktop\\TestCRito\\Strawberry_Briar.wad.client";
+	//const std::string file_path = "C:\\Riot Games\\League of Legends\\Game\\DATA\\FINAL\\Champions\\Darius.wad.client";
+	//const std::string file_path = "C:\\Riot Games\\League of Legends\\Game\\DATA\\FINAL\\Maps\\Shipping\\Map11.wad.client";
+
+	std::ifstream inpt_file{ file_path, std::ios::binary };
+	RitoFile::WAD wad = RitoFile::WAD(inpt_file);
+	
+	wad.read();
+	//const std::string subchunk_path = "data/final/champions/darius.wad.subchunktoc";
+
+	//std::string_view subchunk_path = "data/final/champions/strawberry_briar.wad.subchunktoc";
+	//wad.initialize_subchunks(xxh64(subchunk_path.data(), subchunk_path.size()));
+
+	auto unpacked_chunks = std::unordered_map<std::uint64_t, std::vector<char>>();
+	unpacked_chunks.reserve(wad.chunks.size());
+	
+	for (const auto& chunk : wad.chunks) {
+		auto chunk_data = wad.read_data(chunk);
+		auto extension = RitoFile::guess_extension(*chunk_data);
+
+		if (extension == "") {
+			std::cout << std::format("Couldn't guess: {:x}", chunk.hash) << "\n";
+		}
+	}
+
+	std::cout << "End" << "\n";
+}
+
+static inline RitoFile::SKN read_skn(const std::string& file_path) {
+	std::ifstream inpt_file{ file_path, std::ios::binary };
+	RitoFile::SKN mesh = RitoFile::SKN();
+	mesh.read(inpt_file);
+
+	return mesh;
+}
+
+
+void parse_skn(const std::string& file_path) {
+	RitoFile::SKN mesh = read_skn(file_path);
+	std::cerr << "SKN read successfully!" << "\n";
+	std::cout << "Version: " << mesh.major << "." << mesh.minor << "\n" << "\n";
+	std::cout << "Submeshes: " << mesh.submeshes.size() << "\n";
+	int total_indices = 0;
+	int total_vertices = 0;
+
+	for (int i = 0; i < mesh.submeshes.size(); i++) {
+		const auto& submesh = mesh.submeshes.at(i);
+		total_indices += submesh.index_count;
+		total_vertices += submesh.vertex_count;
+		std::cout << std::format("[{:>2}] {:<64} Indices: {} Vertices: {}\n", i, submesh.name, submesh.index_count, submesh.vertex_count);
+	}
+
+	std::cout << "\n" << "Total Indices: " << total_indices << "\n";
+	std::cout << "Total Vertices: " << total_vertices << "\n";
+	std::cout << std::format("{:_^64}\n", "");
+	
+#ifdef _DEBUG
+	std::cout << "Writing SKN...\n";
+	std::ostringstream outp_file{};
+	mesh.write(outp_file);
+	std::ofstream out_file{ "C:\\Users\\GuiSai\\Desktop\\TestCRito\\sett_skin66_2.skn", std::ios::binary };
+	out_file.write(outp_file.str().c_str(), outp_file.str().size());
+
+#endif // DEBUG
+}
+
+int main(int argc, char* argv[]) {
+#ifdef _DEBUG
+	test_wad();
+
+#endif
+
+#ifndef _DEBUG
+	if (argc < 2) {
+		std::cerr << "No file path provided.\n";
+		LOCK_AND_RETURN(-1);
+	}
+
+	std::cerr << "Working File: " << argv[1] << "\n";
+
+	std::string file_path = argv[1];
+
+	std::error_code ec;
+	if (!fs::is_regular_file(fs::path(file_path), ec)) {
+		std::cerr << "Not an file!\n";
+		LOCK_AND_RETURN(-1);
+	}
+
+	if (ec) {
+		std::cerr << "Error while checking file: " << ec.message() << "\n";
+		LOCK_AND_RETURN(-1);
+	}
+
+	if (file_path.ends_with(".wad.client")) {
+		std::cerr << "Not implemented.\n";
+		LOCK_AND_RETURN(-1);
+	}
+	else if (file_path.ends_with(".skn")) {
+		parse_skn(file_path);
+		LOCK_AND_RETURN(0);
+	}
+
+#endif
+	return 0;
+}
