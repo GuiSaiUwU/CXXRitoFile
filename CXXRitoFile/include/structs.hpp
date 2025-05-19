@@ -27,4 +27,12 @@ namespace RitoFile {
 
 		Container4(const T& x, const T& y, const T& z, const T& w) : x(x), y(y), z(z), w(w) {}
 	};
+
+	struct Matrix4 {
+		float
+			a, b, c, d,
+			e, f, g, h,
+			i, j, k, l, 
+			m, n, o, p;
+	};
 }

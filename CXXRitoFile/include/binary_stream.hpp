@@ -12,7 +12,7 @@
 namespace RitoFile {
     class BinaryReader {
     public:
-
+        unsigned int size_offsets = 0;
         std::istream& stream;
 
         BinaryReader(std::istream& s) : stream(s) {}
