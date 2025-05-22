@@ -49,19 +49,12 @@ namespace RitoFile {
 		if (!inpt_file.good()) {
 			throw std::runtime_error("Stream not good");
 		}
-		
-		this->chunks = std::vector<WADChunk>();
-
-#ifdef RITOFILE_USE_TOC_FILE
-		this->subchunks = std::vector<WADSubChunk>();
-#endif // RITOFILE_USE_TOC_FILE
 
 		this->major = 0;
 		this->minor = 0;
 	}
 
 	void WAD::read() {
-		
 		auto signature = reader.readString(2);
 
 		if (!(signature == "RW")) {

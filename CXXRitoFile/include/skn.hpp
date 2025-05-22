@@ -67,9 +67,10 @@ namespace RitoFile {
 		std::uint16_t major, minor;
 		std::uint32_t flags, vertex_size;
 		SKNVertexType vertex_type;
+		BinaryReader reader;
 
-		SKN();
-		void read(std::ifstream& inpt_file);
+		SKN(std::ifstream& inpt_file);
+		void read();
 		void write(std::ostringstream& outp_file);
 	};
 

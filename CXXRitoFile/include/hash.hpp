@@ -7,5 +7,5 @@
 #define xxh64(inpt, size) XXHash64::hash(inpt, size, 0)
 
 namespace RitoFile {
-    std::uint32_t inline fnv1a_lower_cased(const std::string_view& str) noexcept;
+    std::uint32_t fnv1a_lower_cased(const std::string_view& str) noexcept;
 }

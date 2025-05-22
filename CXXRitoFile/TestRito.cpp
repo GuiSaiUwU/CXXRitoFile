@@ -47,8 +47,8 @@ void test_wad() {
 
 static inline RitoFile::SKN read_skn(const std::string& file_path) {
 	std::ifstream inpt_file{ file_path, std::ios::binary };
-	RitoFile::SKN mesh = RitoFile::SKN();
-	mesh.read(inpt_file);
+	RitoFile::SKN mesh = RitoFile::SKN(inpt_file);
+	mesh.read();
 
 	return mesh;
 }

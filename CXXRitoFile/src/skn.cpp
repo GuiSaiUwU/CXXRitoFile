@@ -2,24 +2,19 @@
 
 
 namespace RitoFile {
-	SKN::SKN() {
+	SKN::SKN(std::ifstream& inpt_file) : reader(inpt_file) {
+		if (!inpt_file.good()) {
+			throw std::runtime_error("Stream not good");
+		}
+
 		this->vertex_type = SKNVertexType::BASIC;
-		this->vertices = std::vector<SKNVertex>();
-		this->submeshes = std::vector<SKNSubmesh>();
-		this->indices = std::vector<std::uint16_t>();
 		this->major = 0;
 		this->minor = 0;
 		this->flags = 0;
 		this->vertex_size = 0;
 	}
 
-	void SKN::read(std::ifstream& inpt_file) {
-		if (!inpt_file.good()) {
-			throw std::runtime_error("File stream isnt good bro ;-;");
-		}
-
-		BinaryReader reader{ inpt_file };
-
+	void SKN::read() {
 #pragma region HeaderRead
 
 		auto signature = reader.readU32();

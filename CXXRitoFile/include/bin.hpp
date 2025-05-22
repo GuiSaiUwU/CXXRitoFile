@@ -5,6 +5,34 @@
 
 
 namespace RitoFile {
+    struct BINField;
+
+    using BinBasicVariant = std::variant<
+        Container3<std::uint16_t>,
+        bool,
+        std::int8_t,
+        std::uint8_t,
+        std::int16_t,
+        std::uint16_t,
+        std::int32_t,
+        std::uint32_t, // Hash & Link
+        std::int64_t, // File
+        std::uint64_t,
+        std::float_t,
+        Container2<float>, // Vec2
+        Container3<float>, // Vec3
+        Container4<float>, // Vec4 and RGBA
+        Matrix4,
+        std::string
+    >;
+    
+    using BinDataVariant = std::variant <
+        BinBasicVariant,
+        std::vector<BinBasicVariant>, // List & List2
+        std::vector<BINField>, // Pointer & Embed
+        std::vector<std::tuple<BinBasicVariant, BinBasicVariant>> // Map
+    >;
+
     enum BINType : unsigned char {
         // basic
         Empty = 0,
@@ -37,35 +65,26 @@ namespace RitoFile {
         Flag = 135
     };
 
-    struct BINHelper {
+    struct BINField {
         std::uint32_t bin_hash, hash_type;
         BINType type, value_type, key_type;
-        std::variant <
-            Container3<std::uint16_t>,
-            bool,
-            std::int8_t,
-            std::uint8_t,
-            std::int16_t,
-            std::uint16_t,
-            std::int32_t,
-            std::uint32_t, // Hash too
-            std::int64_t, // File too
-            std::uint64_t,
-            std::float_t,
-            Container2<float>, // Vec2
-            Container3<float>, // Vec3
-            Container4<float>, // Vec4 and RGBA
-            Matrix4,
-            std::string,
-            // complex
-            List = 128,
-            List2 = 129,
-            Pointer = 130,
-            Embed = 131,
-            Link = 132,
-            Option = 133,
-            Map = 134,
-            Flag = 135
-        > data;
+        BinDataVariant data;
+    };
+
+    struct BINEntry {
+        std::uint32_t bin_hash;
+        BINType type;
+        BinDataVariant data;
+    };
+
+    class BIN {
+    public:
+        std::vector<std::string> links;
+        std::vector<BINEntry> entries;
+        BinaryReader reader;
+
+        BIN(std::ifstream& inpt_file);
+        void read();
+        void write(std::ostringstream& outp_file);
     };
 }
