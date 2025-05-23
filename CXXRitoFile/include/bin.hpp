@@ -1,39 +1,14 @@
 #pragma once
 #include "structs.hpp"
 #include "binary_stream.hpp"
-#include <variant>
-
+#include <format>
+#include <array>
+#include <algorithm> // std::find
+#include <unordered_map>
+#include <any>
 
 namespace RitoFile {
-    struct BINField;
-
-    using BinBasicVariant = std::variant<
-        Container3<std::uint16_t>,
-        bool,
-        std::int8_t,
-        std::uint8_t,
-        std::int16_t,
-        std::uint16_t,
-        std::int32_t,
-        std::uint32_t, // Hash & Link
-        std::int64_t, // File
-        std::uint64_t,
-        std::float_t,
-        Container2<float>, // Vec2
-        Container3<float>, // Vec3
-        Container4<float>, // Vec4 and RGBA
-        Matrix4,
-        std::string
-    >;
-    
-    using BinDataVariant = std::variant <
-        BinBasicVariant,
-        std::vector<BinBasicVariant>, // List & List2
-        std::vector<BINField>, // Pointer & Embed
-        std::vector<std::tuple<BinBasicVariant, BinBasicVariant>> // Map
-    >;
-
-    enum BINType : unsigned char {
+    enum struct BINType : unsigned char {
         // basic
         Empty = 0,
         Bool = 1,
@@ -68,13 +43,13 @@ namespace RitoFile {
     struct BINField {
         std::uint32_t bin_hash, hash_type;
         BINType type, value_type, key_type;
-        BinDataVariant data;
+        std::any data;
     };
 
     struct BINEntry {
         std::uint32_t bin_hash;
         BINType type;
-        BinDataVariant data;
+        std::vector<BINField> data;
     };
 
     class BIN {
@@ -86,5 +61,11 @@ namespace RitoFile {
         BIN(std::ifstream& inpt_file);
         void read();
         void write(std::ostringstream& outp_file);
+    };
+
+    struct BINHelper {
+
+        static std::any readValue(BinaryReader& reader, BINType value_type);
+        static BINField readField(BinaryReader& reader);
     };
 }
