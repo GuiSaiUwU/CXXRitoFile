@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include "include/skn.hpp"
 #include "include/wad.hpp"
-
+#include "include/bin.hpp"
 
 
 #define LOCK_AND_RETURN(v) \
@@ -53,6 +53,13 @@ static inline RitoFile::SKN read_skn(const std::string& file_path) {
 	return mesh;
 }
 
+void test_bin() {
+	const std::string file_path = "C:\\Users\\GuiSai\\Desktop\\TestCRito\\skin17.bin";
+	std::ifstream inpt_file{ file_path, std::ios::binary };
+	RitoFile::BIN bin_file{ inpt_file };
+	bin_file.read();
+	std::cout << std::format("Size: {}.\n", bin_file.links.size());
+}
 
 void parse_skn(const std::string& file_path) {
 	RitoFile::SKN mesh = read_skn(file_path);
@@ -85,8 +92,8 @@ void parse_skn(const std::string& file_path) {
 
 int main(int argc, char* argv[]) {
 #ifdef _DEBUG
-	test_wad();
-
+	//test_wad();
+	test_bin();
 #endif
 
 #ifndef _DEBUG

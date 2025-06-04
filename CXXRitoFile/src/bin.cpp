@@ -1,4 +1,5 @@
 #include "bin.hpp"
+#include <utility> // std::pair
 
 
 namespace RitoFile {
@@ -45,13 +46,14 @@ namespace RitoFile {
 		this->entries.resize(entry_count);
 		int entry_id = 0;
 		for (auto& entry : this->entries) {
-			entry.type = BINType(entry_types[entry_id]);
+			entry.type = entry_types[entry_id];
 			reader.pad(4); // size
-			entry.bin_hash = reader.readU64();
-			auto field_count = reader.readU16();
+			entry.bin_hash = reader.readU32();
+			std::uint16_t field_count = reader.readU16();
 			for (int i = 0; i < field_count; i++) {
-				entry.data.emplace_back();
+				entry.data.emplace_back(BINHelper::readField(reader));
 			}
+            entry_id++;
 		}
 	}
 	
@@ -136,7 +138,7 @@ namespace RitoFile {
             else {
                 field.data = nullptr;
             }
-            //value = field;
+            value = field;
             break;
         }
 
@@ -151,16 +153,63 @@ namespace RitoFile {
         if (field.type == BINType::List || field.type == BINType::List2) {
             field.value_type = BINType(reader.readU8());
             reader.pad(4); // size
-            auto count = reader.readU32();
+            std::uint32_t count = reader.readU32();
 
             std::vector<std::any> data;
             data.reserve(count);
-            for (uint32_t i = 0; i < count; ++i) {
+            for (std::uint32_t i = 0; i < count; ++i) {
                 data.emplace_back(readValue(reader, field.value_type));
             }
 
             field.data = std::move(data);
         }
+        else if (field.type == BINType::Pointer || field.type == BINType::Embed) {
+            field.hash_type = reader.readU32();
+            if (field.hash_type != 0) {
+                reader.pad(4); // size
+                std::uint16_t count = reader.readU16();
+
+                std::vector<BINField> data;
+                data.reserve(count);
+                for (std::uint16_t i = 0; i < count; ++i) {
+                    data.emplace_back(readField(reader));
+                }
+                field.data = std::move(data);
+            }
+            else {
+                field.data = nullptr;
+            }
+        }
+        else if (field.type == BINType::Option) {
+            field.value_type = BINType(reader.readU8());
+            std::uint8_t count = reader.readU8();
+            if (count != 0) {
+                field.data = readValue(reader, field.value_type);
+            }
+            else {
+                field.data = nullptr;
+            }
+        }
+        else if (field.type == BINType::Map) {
+            field.key_type = BINType(reader.readU8());
+            field.value_type = BINType(reader.readU8());
+            reader.pad(4); // size
+            std::uint32_t count = reader.readU32();
+
+            std::vector<std::pair<std::any, std::any>> data;
+
+            for (std::uint32_t i = 0; i < count; ++i) {
+                std::pair<std::any, std::any> values;
+                values.first = readValue(reader, field.key_type);
+                values.second = readValue(reader, field.value_type);
+                data.emplace_back(std::move(values));
+            }
+            field.data = std::move(data);
+        }
+        else {
+            field.data = readValue(reader, field.type);
+        }
+
         return field;
     }
 }

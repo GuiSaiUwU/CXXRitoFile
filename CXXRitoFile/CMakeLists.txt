@@ -10,8 +10,8 @@ add_executable(CXXRitoFile "TestRito.cpp"
 	"src/hash.cpp"
 	"src/skn.cpp"
  "src/bin.cpp")
-
 target_include_directories(CXXRitoFile PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/)
+
 
 # ZLIB
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third-party/zlib)
@@ -29,3 +29,4 @@ target_include_directories(CXXRitoFile PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third-party/zstd/build/cmake)
 target_include_directories(CXXRitoFile PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third-party/zstd/lib/)
 target_link_libraries(CXXRitoFile PRIVATE libzstd_static)
+

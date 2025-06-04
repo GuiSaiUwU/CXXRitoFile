@@ -6,6 +6,7 @@
 #include <cstring>
 #include <cstdint>
 #include <sstream>
+#include <bit>
 
 #include "structs.hpp"
 

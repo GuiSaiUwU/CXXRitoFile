@@ -8,7 +8,7 @@
 #include <any>
 
 namespace RitoFile {
-    enum struct BINType : unsigned char {
+    enum BINType : unsigned char {
         // basic
         Empty = 0,
         Bool = 1,
@@ -48,7 +48,7 @@ namespace RitoFile {
 
     struct BINEntry {
         std::uint32_t bin_hash;
-        BINType type;
+        std::uint32_t type;
         std::vector<BINField> data;
     };
 
