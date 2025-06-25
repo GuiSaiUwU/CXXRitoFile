@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <filesystem>
 #include <unordered_map>
+#include <ranges>
 #include "include/skn.hpp"
 #include "include/wad.hpp"
 #include "include/bin.hpp"
@@ -10,11 +11,25 @@
 	std::cin.get(); \
 	return v
 
-
+namespace views = std::views;
 namespace fs = std::filesystem;
 /* std::cerr for debugs and errors uwu */
 /* std::cout for infos owo */
 
+template <typename T>
+T ritofile_cast(const std::any& data, const char* file, int line) {
+	try {
+		return std::any_cast<T>(data);
+	}
+	catch (...) {
+		std::cerr << "Cast failed: expected type '" << typeid(T).name()
+			<< "' from any (" << data.type().name() << ")"
+			<< " at " << file << ":" << line << "\n";
+		throw;
+	}
+}
+
+#define cast(type, val) ritofile_cast<type>(val, __FILE__, __LINE__)
 
 void test_wad() {
 	const std::string file_path = "C:\\Users\\GuiSai\\Desktop\\TestCRito\\Strawberry_Briar.wad.client";
@@ -59,6 +74,35 @@ void test_bin() {
 	RitoFile::BIN bin_file{ inpt_file };
 	bin_file.read();
 	std::cout << std::format("Size: {}.\n", bin_file.links.size());
+
+	std::vector<RitoFile::BINField> skinCharacterDataProperties{};
+
+	{
+		auto x = bin_file.get([](const RitoFile::BINEntry& e) {
+			return e.type == RitoFile::fnv1a("SkinCharacterDataProperties");
+		});
+
+		if (!x.data.empty()) {
+			skinCharacterDataProperties = std::any_cast<std::vector<RitoFile::BINField>>(x.data);
+		}
+		else {
+			std::cerr << "Couldn't find skinCharacterDataProperties";
+		}
+	}
+
+	for (auto& sub_entry : skinCharacterDataProperties) {
+		if (sub_entry.hash_type != RitoFile::fnv1a("SkinMeshDataProperties") || sub_entry.type != RitoFile::BINType::Embed) {
+			continue;
+		}
+
+
+		for (auto& x : cast(std::vector<RitoFile::BINField>, sub_entry.data)) {
+			if (x.type == RitoFile::BINType::String) {
+				std::cout << "Str Val: " << cast(std::string, x.data) << "\n";
+			}
+		}
+	}
+
 }
 
 void parse_skn(const std::string& file_path) {

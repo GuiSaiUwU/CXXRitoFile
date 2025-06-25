@@ -54,7 +54,7 @@ namespace RitoFile {
 			this->submeshes.resize(submesh_count);
 			for (auto& s : submeshes) {
 				s.name = reader.readStringPadded(64);
-				s.bin_hash = fnv1a_lower_cased(s.name);
+				s.bin_hash = fnv1a(s.name);
 				s.vertex_start = reader.readU32();
 				s.vertex_count = reader.readU32();
 				s.index_start = reader.readU32();

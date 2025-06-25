@@ -34,7 +34,7 @@ namespace RitoFile {
 
 		// Default
 		SKNSubmesh() :
-			name("Base"), bin_hash(fnv1a_lower_cased("Base")),
+			name("Base"), bin_hash(fnv1a("Base")),
 			index_start(0), index_count(0),
 			vertex_start(0), vertex_count(0)
 		{
@@ -42,7 +42,7 @@ namespace RitoFile {
 
 		// For major 0
 		SKNSubmesh(const std::uint32_t& index_count, const std::uint32_t& vertex_count) :
-			name("Base"), bin_hash(fnv1a_lower_cased("Base")),
+			name("Base"), bin_hash(fnv1a("Base")),
 			index_start(0), index_count(index_count),
 			vertex_start(0), vertex_count(vertex_count) {
 		}

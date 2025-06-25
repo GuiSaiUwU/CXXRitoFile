@@ -7,9 +7,9 @@ add_executable(CXXRitoFile "TestRito.cpp"
 	"src/wad.cpp"
 	"include/structs.hpp"
 	"include/binary_stream.hpp"
-	"src/hash.cpp"
 	"src/skn.cpp"
- "src/bin.cpp")
+	"src/bin.cpp"
+)
 target_include_directories(CXXRitoFile PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/)
 
 

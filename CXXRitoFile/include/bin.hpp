@@ -6,6 +6,7 @@
 #include <algorithm> // std::find
 #include <unordered_map>
 #include <any>
+#include <functional>
 
 
 
@@ -61,6 +62,7 @@ namespace RitoFile {
         BinaryReader reader;
 
         BIN(std::ifstream& inpt_file);
+        BINEntry get(std::function<bool(const BINEntry&)> func);
         void read();
         void write(std::ostringstream& outp_file);
     };

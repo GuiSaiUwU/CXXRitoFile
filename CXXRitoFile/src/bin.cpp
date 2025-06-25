@@ -1,13 +1,23 @@
 #include "bin.hpp"
 #include <utility> // std::pair
 
-
 namespace RitoFile {
 	BIN::BIN(std::ifstream& inpt_file) : reader(inpt_file) {
 		if (!inpt_file.good()) {
 			throw std::runtime_error("Stream not good");
 		}
 	}
+    
+    BINEntry BIN::get(std::function<bool(const BINEntry&)> func) {
+        for (auto& entry : this->entries) {
+            if (func(entry)) {
+                return entry;
+            }
+        }
+
+        return {.type=0};
+    }
+
 
 	void BIN::read() {
 		auto signature = reader.readString(4);
