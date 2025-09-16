@@ -3,30 +3,38 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_executable(CXXRitoFile "TestRito.cpp"
-	"src/wad.cpp"
-	"include/structs.hpp"
-	"include/binary_stream.hpp"
-	"src/skn.cpp"
-	"src/bin.cpp"
- "CheckSkinHack.cpp")
-target_include_directories(CXXRitoFile PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/)
+# Main lib
+add_library(CXXRitoFile STATIC
+    "src/wad.cpp"
+    "src/skn.cpp"
+    "src/bin.cpp"
+)
+target_include_directories(CXXRitoFile 
+    PUBLIC 
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/
+        ${CMAKE_CURRENT_SOURCE_DIR}/third-party/xxhash/
+        ${CMAKE_CURRENT_SOURCE_DIR}/third-party/zlib/
+        ${CMAKE_CURRENT_SOURCE_DIR}/third-party/gzip-hpp/include/
+        ${CMAKE_CURRENT_SOURCE_DIR}/third-party/zstd/lib/
+)
 
+# Executables
+add_executable(TestRito "TestRito.cpp")
+target_link_libraries(TestRito PRIVATE CXXRitoFile)
+add_executable(CheckModInfo "CheckModInfo.cpp")
+target_link_libraries(CheckModInfo PRIVATE CXXRitoFile)
 
 # ZLIB
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third-party/zlib)
-target_include_directories(CXXRitoFile PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third-party/zlib/)
 target_link_libraries(CXXRitoFile PRIVATE zlibstatic)
 
 # GZIP (ZLIB Wrapper)
 add_definitions(-D ZLIB_CONST)
-target_include_directories(CXXRitoFile PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third-party/gzip-hpp/include/)
-
-# XXHash For WAD hashing uwu
-target_include_directories(CXXRitoFile PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third-party/xxhash/)
 
 # ZSTD
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third-party/zstd/build/cmake)
-target_include_directories(CXXRitoFile PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third-party/zstd/lib/)
 target_link_libraries(CXXRitoFile PRIVATE libzstd_static)
 
+# Links uwu
+target_link_libraries(TestRito PRIVATE zlibstatic libzstd_static)
+target_link_libraries(CheckModInfo PRIVATE zlibstatic libzstd_static)
