@@ -37,7 +37,16 @@ void test_wad() {
 	//const std::string file_path = "C:\\Riot Games\\League of Legends\\Game\\DATA\\FINAL\\Maps\\Shipping\\Map11.wad.client";
 
 	std::ifstream inpt_file{ file_path, std::ios::binary };
-	RitoFile::WAD wad = RitoFile::WAD(inpt_file);
+	std::stringstream wad_buffer;
+	if (inpt_file) {
+		wad_buffer << inpt_file.rdbuf();
+		inpt_file.close();
+	}
+	else {
+		std::cout << "Couldn't load file.\n";
+		return;
+	}
+	RitoFile::WAD wad = RitoFile::WAD(wad_buffer);
 	
 	wad.read();
 	//const std::string subchunk_path = "data/final/champions/darius.wad.subchunktoc";
@@ -62,7 +71,15 @@ void test_wad() {
 
 static inline RitoFile::SKN read_skn(const std::string& file_path) {
 	std::ifstream inpt_file{ file_path, std::ios::binary };
-	RitoFile::SKN mesh = RitoFile::SKN(inpt_file);
+	std::stringstream skn_buffer;
+	if (inpt_file) {
+		skn_buffer << inpt_file.rdbuf();
+		inpt_file.close();
+	}
+	else {
+		std::cout << "Couldn't load file.\n";
+	}
+	RitoFile::SKN mesh = RitoFile::SKN(skn_buffer);
 	mesh.read();
 
 	return mesh;
@@ -71,7 +88,17 @@ static inline RitoFile::SKN read_skn(const std::string& file_path) {
 void test_bin() {
 	const std::string file_path = "C:\\Users\\GuiSai\\Desktop\\TestCRito\\skin17.bin";
 	std::ifstream inpt_file{ file_path, std::ios::binary };
-	RitoFile::BIN bin_file{ inpt_file };
+	std::stringstream bin_buffer;
+	if (inpt_file) {
+		bin_buffer << inpt_file.rdbuf();
+		inpt_file.close();
+	}
+	else {
+		std::cout << "Couldn't load file.\n";
+		return;
+	}
+
+	RitoFile::BIN bin_file{ bin_buffer };
 	bin_file.read();
 	std::cout << std::format("Size: {}.\n", bin_file.links.size());
 

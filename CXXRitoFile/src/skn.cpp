@@ -2,7 +2,7 @@
 
 
 namespace RitoFile {
-	SKN::SKN(std::ifstream& inpt_file) : reader(inpt_file) {
+	SKN::SKN(std::stringstream& inpt_file) : reader(inpt_file) {
 		if (!inpt_file.good()) {
 			throw std::runtime_error("Stream not good");
 		}

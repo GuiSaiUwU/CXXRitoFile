@@ -61,7 +61,7 @@ namespace RitoFile {
         std::vector<BINEntry> entries;
         BinaryReader reader;
 
-        BIN(std::ifstream& inpt_file);
+        BIN(std::stringstream& inpt_file);
         BINEntry get(std::function<bool(const BINEntry&)> func);
         void read();
         void write(std::ostringstream& outp_file);

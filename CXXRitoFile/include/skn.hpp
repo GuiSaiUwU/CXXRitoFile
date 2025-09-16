@@ -69,7 +69,7 @@ namespace RitoFile {
 		SKNVertexType vertex_type;
 		BinaryReader reader;
 
-		SKN(std::ifstream& inpt_file);
+		SKN(std::stringstream& inpt_file);
 		void read();
 		void write(std::ostringstream& outp_file);
 	};

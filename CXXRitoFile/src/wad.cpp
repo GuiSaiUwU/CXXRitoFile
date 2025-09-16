@@ -45,7 +45,7 @@ namespace RitoFile {
 		return "";
 	}
 
-	WAD::WAD(std::ifstream& inpt_file): reader(inpt_file) {
+	WAD::WAD(std::stringstream& inpt_file): reader(inpt_file) {
 		if (!inpt_file.good()) {
 			throw std::runtime_error("Stream not good");
 		}

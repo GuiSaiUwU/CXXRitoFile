@@ -14,9 +14,9 @@ namespace RitoFile {
     class BinaryReader {
     public:
         unsigned int size_offsets = 0;
-        std::istream& stream;
+        std::stringstream& stream;
 
-        BinaryReader(std::istream& s) : stream(s) {}
+        BinaryReader(std::stringstream& s) : stream(s) {}
 
         inline size_t tell() { return stream.tellg(); }
         inline void seek(size_t pos, std::ios_base::seekdir dir = std::ios::beg) { stream.seekg(pos, dir); }

@@ -2,7 +2,7 @@
 #include <utility> // std::pair
 
 namespace RitoFile {
-	BIN::BIN(std::ifstream& inpt_file) : reader(inpt_file) {
+	BIN::BIN(std::stringstream& inpt_file) : reader(inpt_file) {
 		if (!inpt_file.good()) {
 			throw std::runtime_error("Stream not good");
 		}

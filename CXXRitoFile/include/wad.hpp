@@ -95,7 +95,7 @@ namespace RitoFile {
 		std::uint8_t major, minor;
 		BinaryReader reader;
 
-		WAD(std::ifstream& inpt_file);
+		WAD(std::stringstream& inpt_file);
 		void read();
 		void write(std::ostringstream& outp_file);
 
