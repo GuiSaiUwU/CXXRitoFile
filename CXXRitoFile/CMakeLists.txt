@@ -21,8 +21,8 @@ target_include_directories(CXXRitoFile
 # Executables
 add_executable(TestRito "TestRito.cpp")
 target_link_libraries(TestRito PRIVATE CXXRitoFile)
-add_executable(CheckModInfo "CheckModInfo.cpp")
-target_link_libraries(CheckModInfo PRIVATE CXXRitoFile)
+add_executable(mod-check "mod-check.cpp")
+target_link_libraries(mod-check PRIVATE CXXRitoFile)
 
 # ZLIB
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third-party/zlib)
@@ -37,4 +37,4 @@ target_link_libraries(CXXRitoFile PRIVATE libzstd_static)
 
 # Links uwu
 target_link_libraries(TestRito PRIVATE zlibstatic libzstd_static)
-target_link_libraries(CheckModInfo PRIVATE zlibstatic libzstd_static)
+target_link_libraries(mod-check PRIVATE zlibstatic libzstd_static)

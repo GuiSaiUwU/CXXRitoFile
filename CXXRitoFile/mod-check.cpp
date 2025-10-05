@@ -139,8 +139,10 @@ int main(int argc, char* argv[]) {
 									// Ex: ASSETS/Characters/Irelia/Skins/Skin45/IreliaLoadScreen_45.tex
 									auto splittedString = splitStr(loadingScreenPath, "/");
 									std::string skinNumberInLoadingScreen = splittedString.at(4);
+									std::transform(skinNumberInLoadingScreen.begin(), skinNumberInLoadingScreen.end(), skinNumberInLoadingScreen.begin(),
+										[](unsigned char c) { return std::tolower(c); });
 
-									if (skinNumberInLoadingScreen != std::format("Skin{}", skinId)) {
+									if (skinNumberInLoadingScreen != std::format("skin{:02}", skinId) && skinNumberInLoadingScreen != "base") {
 										isSkinHack = true;
 									}
 								}
@@ -158,9 +160,9 @@ int main(int argc, char* argv[]) {
 		}
 	}
 	
-	if (isSkinHack && otherFile >= 0 && nonCharBin == 0 && voSfxFile == 0 && charBin == 1
+	if (isSkinHack && otherFile == 0 && nonCharBin == 0 && voSfxFile == 0 && charBin == 1
 	){
-		// Skin hack flag & just charBin maybe some other files
+		// Skin hack flag & just charBin
 		r_val = ReturnVal::SKIN_HACK;
 		std::cout << "{PIRATE}";
 	}
@@ -190,7 +192,7 @@ int main(int argc, char* argv[]) {
 	{
 		/* Just a champion bin, thats sus owo */
 		r_val = ReturnVal::MAYBE_SKIN_HACK;
-		std::cout << "{UNKNOWN}";
+		std::cout << "{MAYBE-PIRATE}";
 	}
 	else if (
 		otherFile >= 0
