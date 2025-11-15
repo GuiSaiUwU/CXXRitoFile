@@ -55,14 +55,14 @@ enum ReturnVal : int {
 int main(int argc, char* argv[]) {
 	ReturnVal r_val = ReturnVal::ERROR;
 
-#ifndef DEBUGUWU
+#ifndef _DEBUG
 	if (argc != 2) {
 		return r_val;
 	}
 	const std::string file_path(argv[1]);
 
 #else
-	const std::string file_path = "C:\\Users\\GuiSai\\Desktop\\Milio.wad.client";
+	const std::string file_path = "C:\\Users\\GuiSai\\Desktop\\Yasuo.wad.client";
 #endif
 
 
@@ -86,6 +86,7 @@ int main(int argc, char* argv[]) {
 	std::string championName = getChampionNameFromPath(file_path);
 	//std::cout << "Champion name: " << championName << std::endl;
 	
+	int anmBin = 0;
 	int nonCharBin = 0;
 	int charBin = 0;
 	int otherFile = 0;
@@ -102,16 +103,27 @@ int main(int argc, char* argv[]) {
 			RitoFile::BIN bin_file = RitoFile::BIN(iss);
 			bin_file.read();
 
-			auto skinCharData = bin_file.get([](const RitoFile::BINEntry& e) {
+			auto skinCharDatas = bin_file.get_items([](const RitoFile::BINEntry& e) {
 				return e.type == RitoFile::fnv1a("SkinCharacterDataProperties");
 			});
 
-			if (skinCharData.data.empty()) {
+			auto anmGraphDatas = bin_file.get_items([](const RitoFile::BINEntry& e) {
+				return e.type == RitoFile::fnv1a("AnimationGraphData");
+			});
+
+			if (!anmGraphDatas.empty() && skinCharDatas.empty()) {
+				anmBin += 1;
+				continue;
+			}
+			else if (skinCharDatas.empty()) {
 				nonCharBin += 1;
 				continue;
 			}
-			
-			charBin += 1;
+			else {
+				charBin += 1;
+			}
+
+			auto skinCharData = skinCharDatas.at(0);
 
 			/* Check for skin stuff */
 			short skinId = -1;
@@ -125,27 +137,30 @@ int main(int argc, char* argv[]) {
 			if (skinId == -1) {
 				continue;
 			}
+			auto testCharProps = skinCharData.get_items([](const RitoFile::BINField& e) {
+				return e.bin_hash == RitoFile::fnv1a("loadscreen");
+			});
+			std::cout << std::format("Skin ID: {}, has loadscreen: {}\n", skinId, !testCharProps.empty());
 
-			// We just check if the loadscreen is an skin one
-			for (auto const& char_prop : skinCharData.data) {
-				if (char_prop.bin_hash == RitoFile::fnv1a("loadscreen")) {
-					if (char_prop.type == RitoFile::Embed) {
-						auto imageDatas = std::any_cast<std::vector<RitoFile::BINField>>(char_prop.data);
-						for (auto const& imageData : imageDatas) {
-							if (imageData.type == RitoFile::String) {
-								auto loadingScreenPath = std::any_cast<std::string>(imageData.data);
-								//std::cout << loadingScreenPath;
-								if (static_cast<int>(std::count(loadingScreenPath.begin(), loadingScreenPath.end(), '/')) == 5) {
-									// Ex: ASSETS/Characters/Irelia/Skins/Skin45/IreliaLoadScreen_45.tex
-									auto splittedString = splitStr(loadingScreenPath, "/");
-									std::string skinNumberInLoadingScreen = splittedString.at(4);
-									std::transform(skinNumberInLoadingScreen.begin(), skinNumberInLoadingScreen.end(), skinNumberInLoadingScreen.begin(),
-										[](unsigned char c) { return std::tolower(c); });
+			// Substitua o for manual por get_items para buscar o campo "loadscreen"
+			auto loadscreenFields = skinCharData.get_items([](const RitoFile::BINField& e) {
+				return e.bin_hash == RitoFile::fnv1a("loadscreen") && e.type == RitoFile::Embed;
+			});
 
-									if (skinNumberInLoadingScreen != std::format("skin{:02}", skinId) && skinNumberInLoadingScreen != "base") {
-										isSkinHack = true;
-									}
-								}
+			for (const auto& loadscreen : loadscreenFields) {
+				if (!loadscreen.data.has_value()) continue;
+				// Extrai o campo "image" diretamente do embed
+				for (const auto& field : std::any_cast<std::vector<RitoFile::BINField>>(loadscreen.data)) {
+					if (field.type == RitoFile::String && field.bin_hash == RitoFile::fnv1a("image")) {
+						auto loadingScreenPath = std::any_cast<std::string>(field.data);
+						if (std::count(loadingScreenPath.begin(), loadingScreenPath.end(), '/') == 5) {
+							auto splittedString = splitStr(loadingScreenPath, "/");
+							std::string skinNumberInLoadingScreen = splittedString.at(4);
+							std::transform(skinNumberInLoadingScreen.begin(), skinNumberInLoadingScreen.end(), skinNumberInLoadingScreen.begin(),
+								[](unsigned char c) { return std::tolower(c); });
+
+							if (skinNumberInLoadingScreen != std::format("skin{:02}", skinId) && skinNumberInLoadingScreen != "base") {
+								isSkinHack = true;
 							}
 						}
 					}
@@ -160,7 +175,12 @@ int main(int argc, char* argv[]) {
 		}
 	}
 	
-	if (isSkinHack && otherFile == 0 && nonCharBin == 0 && voSfxFile == 0 && charBin == 1
+	if (isSkinHack
+		&& otherFile == 0
+		&& nonCharBin == 0
+		&& voSfxFile == 0
+		&& charBin == 1
+		&& anmBin >= 0 /* Some mods has anm bin too */
 	){
 		// Skin hack flag & just charBin
 		r_val = ReturnVal::SKIN_HACK;

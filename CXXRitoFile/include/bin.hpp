@@ -53,6 +53,8 @@ namespace RitoFile {
         std::uint32_t bin_hash;
         std::uint32_t type;
         std::vector<BINField> data;
+
+        std::vector<BINField> get_items(std::function<bool(const BINField&)> func);
     };
 
     class BIN {
@@ -62,7 +64,7 @@ namespace RitoFile {
         BinaryReader reader;
 
         BIN(std::stringstream& inpt_file);
-        BINEntry get(std::function<bool(const BINEntry&)> func);
+        std::vector<BINEntry> get_items(std::function<bool(const BINEntry&)> func);
         void read();
         void write(std::ostringstream& outp_file);
     };
@@ -72,4 +74,5 @@ namespace RitoFile {
         static std::any readValue(BinaryReader& reader, BINType value_type);
         static BINField readField(BinaryReader& reader);
     };
+
 }

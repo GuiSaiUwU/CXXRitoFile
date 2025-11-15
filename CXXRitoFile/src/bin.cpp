@@ -7,17 +7,38 @@ namespace RitoFile {
 			throw std::runtime_error("Stream not good");
 		}
 	}
-    
-    BINEntry BIN::get(std::function<bool(const BINEntry&)> func) {
+
+    std::vector<BINEntry> BIN::get_items(std::function<bool(const BINEntry&)> func) {
+		std::vector<BINEntry> results;
         for (auto& entry : this->entries) {
             if (func(entry)) {
-                return entry;
+				results.emplace_back(entry);
             }
         }
 
-        return {.type=0};
+		return results;
     }
 
+    std::vector<BINField> BINEntry::get_items(std::function<bool(const BINField&)> func) {
+        std::vector<BINField> results;
+        for (auto& entry : this->data) {
+            if (func(entry)) {
+                results.emplace_back(entry);
+            }
+
+            if (entry.type == BINType::Embed || entry.type == BINType::Pointer) {
+                if (entry.data.has_value()) {
+                    auto sub_entries = std::any_cast<std::vector<BINField>>(entry.data);
+                    for (auto& sub_entry : sub_entries) {
+                        if (func(sub_entry)) {
+                            results.emplace_back(sub_entry);
+                        }
+                    }
+                }
+            }
+        }
+        return results;
+    }
 
 	void BIN::read() {
 		auto signature = reader.readString(4);
