@@ -8,7 +8,7 @@ add_library(CXXRitoFile STATIC
     "src/wad.cpp"
     "src/skn.cpp"
     "src/bin.cpp"
-)
+ "src/anm.cpp")
 target_include_directories(CXXRitoFile 
     PUBLIC 
         ${CMAKE_CURRENT_SOURCE_DIR}/include/
@@ -19,9 +19,9 @@ target_include_directories(CXXRitoFile
 )
 
 # Executables
-add_executable(TestRito "TestRito.cpp")
+add_executable(TestRito "TestRito.cpp" "src/anm.cpp")
 target_link_libraries(TestRito PRIVATE CXXRitoFile)
-add_executable(mod-check "mod-check.cpp")
+add_executable(mod-check "mod-check.cpp" "src/anm.cpp")
 target_link_libraries(mod-check PRIVATE CXXRitoFile)
 
 # ZLIB

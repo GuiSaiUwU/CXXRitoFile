@@ -5,6 +5,7 @@
 #include "include/skn.hpp"
 #include "include/wad.hpp"
 #include "include/bin.hpp"
+#include "include/anm.hpp"
 
 
 #define LOCK_AND_RETURN(v) \
@@ -105,12 +106,12 @@ void test_bin() {
 	std::vector<RitoFile::BINField> skinCharacterDataProperties{};
 
 	{
-		auto x = bin_file.get([](const RitoFile::BINEntry& e) {
+		auto x = bin_file.get_items([](const RitoFile::BINEntry& e) {
 			return e.type == RitoFile::fnv1a("SkinCharacterDataProperties");
 		});
 
-		if (!x.data.empty()) {
-			skinCharacterDataProperties = std::any_cast<std::vector<RitoFile::BINField>>(x.data);
+		if (!x.empty()) {
+			skinCharacterDataProperties = std::any_cast<std::vector<RitoFile::BINField>>(x.at(0));
 		}
 		else {
 			std::cerr << "Couldn't find skinCharacterDataProperties";
@@ -161,10 +162,29 @@ void parse_skn(const std::string& file_path) {
 #endif // DEBUG
 }
 
+void test_anm() {
+	const std::string file_path = "C:\\Users\\GuiSai\\Desktop\\TestCRito\\sett_attack1.anm";
+	std::ifstream inpt_file{ file_path, std::ios::binary };
+	std::stringstream anm_buffer;
+	if (inpt_file) {
+		anm_buffer << inpt_file.rdbuf();
+		inpt_file.close();
+	}
+	else {
+		std::cout << "Couldn't load file.\n";
+		return;
+	}
+	RitoFile::ANM anm_file{ anm_buffer };
+	anm_file.read();
+	std::cout << std::format("ANM Version: {}.\n", anm_file.version);
+	std::cout << std::format("ANM Tracks: {}.\n", anm_file.tracks.size());
+}
+
 int main(int argc, char* argv[]) {
 #ifdef _DEBUG
 	//test_wad();
-	test_bin();
+	//test_bin();
+	test_anm();
 #endif
 
 #ifndef _DEBUG
