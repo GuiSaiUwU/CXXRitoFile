@@ -16,4 +16,19 @@ namespace RitoFile {
 
         return h;
     }
+
+    inline std::uint32_t elf(const std::string_view& str) {
+		std::uint32_t h = 0;
+        
+        for (std::uint32_t c : str) {
+			h = (h << 4) + c;
+			std::uint32_t t = (h & 0xF0000000);
+            if (t != 0) {
+                h ^= (t >> 24);
+            }
+			h &= ~t;
+        }
+
+        return h;
+    }
 }
