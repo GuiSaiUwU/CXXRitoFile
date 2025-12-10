@@ -61,6 +61,7 @@ namespace RitoFile {
         inline float readF32() { return readScalar<float>(); }
         inline double readF64() { return readScalar<double>(); }
         inline Matrix4 readMtx4() { return readScalar<Matrix4>(); }
+		inline Quaternion readQuaternion() { return readScalar<Quaternion>(); }
 
         inline std::string readString(size_t length) {
             std::string str(length, '\0');
