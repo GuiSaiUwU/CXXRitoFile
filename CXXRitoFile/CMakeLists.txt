@@ -8,7 +8,9 @@ add_library(CXXRitoFile STATIC
     "src/wad.cpp"
     "src/skn.cpp"
     "src/bin.cpp"
- "src/anm.cpp")
+    "src/anm.cpp"
+    "src/mapgeo.cpp"
+)
 target_include_directories(CXXRitoFile 
     PUBLIC 
         ${CMAKE_CURRENT_SOURCE_DIR}/include/
