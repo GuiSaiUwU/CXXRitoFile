@@ -137,7 +137,18 @@ namespace RitoFile {
         {MAPGEOVertexElementFormat::XYZW_Packed16161616,{8, 4}}
     };
 
+    static std::uint32_t getElementSize(MAPGEOVertexElementFormat format) {
+        auto it = MAPGEOFormatMap.find(format);
+        if (it != MAPGEOFormatMap.end()) {
+            return it->second.byte_size;
+        }
+        // Throw or return 0 for unknown formats
+        throw std::runtime_error(std::format("Unknown vertex element format: {}",
+            static_cast<int>(format)));
+    }
+
     using VertexDataVariant = std::variant<
+        std::monostate,
         float,                // X_Float32
         Container2<float>,    // XY_Float32
         Container3<float>,    // XYZ_Float32

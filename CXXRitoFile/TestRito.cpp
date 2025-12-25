@@ -6,6 +6,7 @@
 #include "include/wad.hpp"
 #include "include/bin.hpp"
 #include "include/anm.hpp"
+#include "include/mapgeo.hpp"
 
 
 #define LOCK_AND_RETURN(v) \
@@ -180,11 +181,31 @@ void test_anm() {
 	std::cout << std::format("ANM Tracks: {}.\n", anm_file.tracks.size());
 }
 
+void test_mapgeo() {
+	const std::string file_path = "C:\\Users\\GuiSai\\Desktop\\TestCRito\\base_a.mapgeo";
+	std::ifstream inpt_file{ file_path, std::ios::binary };
+	std::stringstream mapgeo_buffer;
+
+	if (inpt_file) {
+		mapgeo_buffer << inpt_file.rdbuf();
+		inpt_file.close();
+	}
+	else {
+		std::cout << "Couldn't load file.\n";
+		return;
+	}
+
+	RitoFile::MAPGEO mapgeo_file{ mapgeo_buffer };
+	mapgeo_file.read();
+	std::cout << std::format("MAPGEO Version: {}.\n", mapgeo_file.version);
+}
+
 int main(int argc, char* argv[]) {
 #ifdef _DEBUG
 	//test_wad();
 	//test_bin();
-	test_anm();
+	//test_anm();
+	test_mapgeo();
 #endif
 
 #ifndef _DEBUG
