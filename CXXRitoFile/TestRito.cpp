@@ -204,8 +204,8 @@ int main(int argc, char* argv[]) {
 #ifdef _DEBUG
 	//test_wad();
 	//test_bin();
-	//test_anm();
-	test_mapgeo();
+	test_anm();
+	//test_mapgeo();
 #endif
 
 #ifndef _DEBUG

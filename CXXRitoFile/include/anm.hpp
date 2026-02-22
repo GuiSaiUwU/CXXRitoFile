@@ -24,7 +24,7 @@ namespace RitoFile {
 
 	struct ANMTrack {
 		std::uint32_t joint_hash;
-		std::map<std::uint32_t, ANMPose> poses;
+		std::map<float, ANMPose> poses;
 	};
 
 	class ANM {

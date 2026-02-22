@@ -90,12 +90,13 @@ namespace RitoFile {
 				}
 
 				if (found_track == nullptr) {
+					[[unlikely]]
 					// This frame has wrong joint hash?
 					continue;
 				}
 
 				// Parse pose
-				std::uint32_t time = static_cast<std::uint32_t>((compressed_time / 65535.0 * max_time) * this->fps);
+				float time = (((compressed_time / 65535.0) * max_time) * this->fps);
 
 				ANMPose* pose_ptr = nullptr;
 				if (found_track->poses.contains(time)) {
@@ -339,23 +340,22 @@ namespace RitoFile {
 
 	[[nodiscard]] Quaternion ANMHelper::decompress_quaternion(std::vector<std::uint8_t>& bytes)
 	{
-		[[unlikely]] if (bytes.size() < 6) {
+		if (bytes.size() < 6) {
+			[[unlikely]]
 			throw std::invalid_argument("Byte array must be at least 6 bytes long.");
 		}
+		std::uint64_t bits =
+			(std::uint64_t{bytes[0]} << (0*8)) +
+			(std::uint64_t{bytes[1]} << (1*8)) +
+			(std::uint64_t{bytes[2]} << (2*8)) +
+			(std::uint64_t{bytes[3]} << (3*8)) +
+			(std::uint64_t{bytes[4]} << (4*8)) +
+			(std::uint64_t{bytes[5]} << (5*8));
 
-		// Use uint64_t to avoid overflow issues
-		std::uint64_t first = static_cast<std::uint64_t>(bytes[0]) |
-			(static_cast<std::uint64_t>(bytes[1]) << 8);
-		std::uint64_t second = static_cast<std::uint64_t>(bytes[2]) |
-			(static_cast<std::uint64_t>(bytes[3]) << 8);
-		std::uint64_t third = static_cast<std::uint64_t>(bytes[4]) |
-			(static_cast<std::uint64_t>(bytes[5]) << 8);
-
-		std::uint64_t bits = first | (second << 16) | (third << 32);
 		std::uint8_t max_index = static_cast<std::uint8_t>((bits >> 45) & 3);
 
-		constexpr float one_div_sqrt2 = 0.70710678118f;
-		constexpr float sqrt2_div_32767 = 0.00004315969f;
+		float one_div_sqrt2 = 0.70710678118f;
+		float sqrt2_div_32767 = 0.00004315969f;
 
 		float a = static_cast<float>((bits >> 30) & 0x7FFF) * sqrt2_div_32767 - one_div_sqrt2;
 		float b = static_cast<float>((bits >> 15) & 0x7FFF) * sqrt2_div_32767 - one_div_sqrt2;
@@ -373,7 +373,8 @@ namespace RitoFile {
 
 	[[nodiscard]] Container3<float> ANMHelper::decompress_vector3(Container3<float>& min, Container3<float>& max, std::vector<std::uint8_t>& bytes)
 	{
-		[[unlikely]] if (bytes.size() < 6) {
+		if (bytes.size() < 6) {
+			[[unlikely]]
 			throw std::invalid_argument("Byte array must be at least 6 bytes long.");
 		}
 
