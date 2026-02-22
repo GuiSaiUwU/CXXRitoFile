@@ -1,0 +1,17 @@
+{
+    "configurations": [
+        {
+            "name": "CMake: Test TestRito",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/CXXRitoFile/Debug/TestRito.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/build/CXXRitoFile/Debug",
+            "environment": [],
+            "console": "integratedTerminal",
+            "preLaunchTask": "CMake: build project"
+        }
+    ],
+    "version": "2.0.0"
+}

@@ -21,9 +21,9 @@ target_include_directories(CXXRitoFile
 )
 
 # Executables
-add_executable(TestRito "TestRito.cpp" "src/anm.cpp")
+add_executable(TestRito "TestRito.cpp")
 target_link_libraries(TestRito PRIVATE CXXRitoFile)
-add_executable(mod-check "mod-check.cpp" "src/anm.cpp")
+add_executable(mod-check "mod-check.cpp")
 target_link_libraries(mod-check PRIVATE CXXRitoFile)
 
 # ZLIB

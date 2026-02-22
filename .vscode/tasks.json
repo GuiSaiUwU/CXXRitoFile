@@ -1,0 +1,44 @@
+{
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "CMake: configure project",
+            "command": "cmake",
+            "args": [
+                "-B",
+                "${workspaceFolder}/build",
+                "-S",
+                "${workspaceFolder}",
+                "-G",
+                "Visual Studio 17 2022"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "detail": "Configure CMake with Visual Studio 17 2022 generator - run this to verify generator"
+        },
+        {
+            "type": "shell",
+            "label": "CMake: build project",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "${workspaceFolder}/build",
+                "--config",
+                "Debug"
+            ],
+            "dependsOn": [
+                "CMake: configure project"
+            ],
+            "group": {
+                "kind": "build"
+            },
+            "problemMatcher": [
+                "$msCompile"
+            ],
+            "detail": "Build project using CMake (auto-configures if needed)"
+        }
+    ],
+    "version": "2.0.0"
+}
