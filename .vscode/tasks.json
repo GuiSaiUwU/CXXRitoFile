@@ -20,7 +20,7 @@
         },
         {
             "type": "shell",
-            "label": "CMake: build project",
+            "label": "CMake: Build ALL",
             "command": "cmake",
             "args": [
                 "--build",
@@ -28,8 +28,25 @@
                 "--config",
                 "Debug"
             ],
-            "dependsOn": [
-                "CMake: configure project"
+            "group": {
+                "kind": "build"
+            },
+            "problemMatcher": [
+                "$msCompile"
+            ],
+            "detail": "Compiles everythin bruh ;-;"
+        },
+        {
+            "type": "shell",
+            "label": "CMake: build TestRito",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "${workspaceFolder}/build",
+                "--config",
+                "Debug",
+                "--target",
+                "TestRito"
             ],
             "group": {
                 "kind": "build"
@@ -37,7 +54,7 @@
             "problemMatcher": [
                 "$msCompile"
             ],
-            "detail": "Build project using CMake (auto-configures if needed)"
+            "detail": "Just the testRito owo"
         }
     ],
     "version": "2.0.0"
