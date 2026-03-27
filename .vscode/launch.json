@@ -10,7 +10,7 @@
             "cwd": "${workspaceFolder}/build/CXXRitoFile/Debug",
             "environment": [],
             "console": "integratedTerminal",
-            "preLaunchTask": "CMake: build project"
+            "preLaunchTask": "CMake: build TestRito"
         }
     ],
     "version": "2.0.0"
