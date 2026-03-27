@@ -17,7 +17,7 @@ git clone https://github.com/GuiSaiUwU/CXXRitoFile/ --recursive
 
 ### VSCode:
 1. Ctrl+Shift+P
-1. `Tasks: Run Task` and run `CMAKE: Build configure project`
+1. `Tasks: Run Task` and run `CMAKE: Build ALL` or `CMake: build TestRito`
 1. Now you can debug with the launch `CMake: Test TestRito` or manually run the task `CMake: build project`
 
 ### Visual studio / Manually:
