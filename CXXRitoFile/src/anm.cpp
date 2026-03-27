@@ -89,8 +89,7 @@ namespace RitoFile {
 					}
 				}
 
-				if (found_track == nullptr) {
-					[[unlikely]]
+				if (found_track == nullptr) [[unlikely]] {
 					// This frame has wrong joint hash?
 					continue;
 				}
@@ -340,8 +339,7 @@ namespace RitoFile {
 
 	[[nodiscard]] Quaternion ANMHelper::decompress_quaternion(std::vector<std::uint8_t>& bytes)
 	{
-		if (bytes.size() < 6) {
-			[[unlikely]]
+		if (bytes.size() < 6) [[unlikely]] {
 			throw std::invalid_argument("Byte array must be at least 6 bytes long.");
 		}
 		std::uint64_t bits =
@@ -373,8 +371,7 @@ namespace RitoFile {
 
 	[[nodiscard]] Container3<float> ANMHelper::decompress_vector3(Container3<float>& min, Container3<float>& max, std::vector<std::uint8_t>& bytes)
 	{
-		if (bytes.size() < 6) {
-			[[unlikely]]
+		if (bytes.size() < 6) [[unlikely]] {
 			throw std::invalid_argument("Byte array must be at least 6 bytes long.");
 		}
 

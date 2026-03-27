@@ -95,10 +95,9 @@ namespace RitoFile {
 		this->indices.reserve(index_count);
 		for (std::uint32_t i = 0; i < index_count; i += 3) {
 
-			[[unlikely]]
 			if (local_indices[i] == local_indices[i + 1] ||
 				local_indices[i] == local_indices[i + 2] ||
-				local_indices[i + 1] == local_indices[i + 2]) {
+				local_indices[i + 1] == local_indices[i + 2]) [[unlikely]] {
 				continue; // Zac SKN for some reason has bad faces
 			}
 			this->indices.push_back(local_indices[i]);

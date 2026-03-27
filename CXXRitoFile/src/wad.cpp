@@ -138,8 +138,7 @@ namespace RitoFile {
 
 		case WADCompressionType::ZSTD_CHUNKED:
 #ifdef RITOFILE_USE_TOC_FILE
-			[[unlikely]]
-			if (this->subchunks.size() == 0) {
+			if (this->subchunks.size() == 0) [[unlikely]] {
 				throw std::runtime_error("Trying to unpack ZSTD_CHUNKED without having subchunks initialized");
 			}
 			try {

@@ -17,7 +17,7 @@ target_include_directories(CXXRitoFile
         ${CMAKE_CURRENT_SOURCE_DIR}/third-party/xxhash/
         ${CMAKE_CURRENT_SOURCE_DIR}/third-party/zlib/
         ${CMAKE_CURRENT_SOURCE_DIR}/third-party/gzip-hpp/include/
-        ${CMAKE_CURRENT_SOURCE_DIR}/third-party/zstd/lib/
+            
 )
 
 # Executables
