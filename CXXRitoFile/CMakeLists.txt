@@ -10,6 +10,8 @@ add_library(CXXRitoFile STATIC
     "src/bin.cpp"
     "src/anm.cpp"
     "src/mapgeo.cpp"
+    "include/tex.hpp"
+    "src/tex.cpp"
 )
 target_include_directories(CXXRitoFile 
     PUBLIC 

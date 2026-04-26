@@ -5,6 +5,7 @@
 #include "include/skn.hpp"
 #include "include/wad.hpp"
 #include "include/bin.hpp"
+#include "include/tex.hpp"
 #include "include/anm.hpp"
 #include "include/mapgeo.hpp"
 
@@ -13,7 +14,6 @@
 	std::cin.get(); \
 	return v
 
-namespace views = std::views;
 namespace fs = std::filesystem;
 /* std::cerr for debugs and errors uwu */
 /* std::cout for infos owo */
@@ -34,10 +34,10 @@ T ritofile_cast(const std::any& data, const char* file, int line) {
 #define cast(type, val) ritofile_cast<type>(val, __FILE__, __LINE__)
 
 void test_wad() {
-	const std::string file_path = "C:\\Users\\GuiSai\\Desktop\\TestCRito\\Strawberry_Briar.wad.client";
+	//const std::string file_path = "C:\\Users\\GuiSai\\Desktop\\TestCRito\\Strawberry_Briar.wad.client";
 	//const std::string file_path = "C:\\Riot Games\\League of Legends\\Game\\DATA\\FINAL\\Champions\\Darius.wad.client";
 	//const std::string file_path = "C:\\Riot Games\\League of Legends\\Game\\DATA\\FINAL\\Maps\\Shipping\\Map11.wad.client";
-
+	const std::string file_path = "C:\\Users\\GuiSai\\Desktop\\cslol-manager\\installed\\TFTMapsSkins\\WAD\\Map22.wad.client";
 	std::ifstream inpt_file{ file_path, std::ios::binary };
 	std::stringstream wad_buffer;
 	if (inpt_file) {
@@ -200,12 +200,44 @@ void test_mapgeo() {
 	std::cout << std::format("MAPGEO Version: {}.\n", mapgeo_file.version);
 }
 
+void test_tex() {
+	std::string file_path = "C:\\Users\\GuiSai\\Desktop\\TestCRito\\test_tex.tex";
+	std::ifstream inpt_file{ file_path, std::ios::binary };	
+	std::stringstream tex_buffer;
+	if (inpt_file) {
+		tex_buffer << inpt_file.rdbuf();
+		inpt_file.close();
+	}
+	else {
+		std::cout << "Couldn't load file.\n";
+		return;
+	}
+	RitoFile::TEX tex_file{ tex_buffer };
+	tex_file.read();
+	
+	std::string output_path = "C:\\Users\\GuiSai\\Desktop\\TestCRito\\test_tex_out.tex";
+	std::ofstream outp_file{ output_path, std::ios::binary };
+	if (outp_file) {
+		std::ostringstream out_buffer;
+		tex_file.write(out_buffer);
+		outp_file.write(out_buffer.str().c_str(), out_buffer.str().size());
+		outp_file.close();
+		std::cout << "TEX written successfully!\n";
+	}
+	else {
+		std::cout << "Couldn't write file.\n";
+		return;
+	}
+}
+
+
 int main(int argc, char* argv[]) {
 #ifdef _DEBUG
 	//test_wad();
 	//test_bin();
-	test_anm();
+	//test_anm();
 	//test_mapgeo();
+	test_tex();
 #endif
 
 #ifndef _DEBUG
