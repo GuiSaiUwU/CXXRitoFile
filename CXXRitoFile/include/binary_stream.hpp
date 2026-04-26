@@ -28,6 +28,15 @@ namespace RitoFile {
             return buffer;
         }
 
+        inline std::vector<char> readRemaining() {
+            std::streampos current_pos = stream.tellg();
+            
+            stream.seekg(0, std::ios::end);
+            size_t remaining_size = stream.tellg() - current_pos;
+
+            stream.seekg(current_pos);
+            return read(remaining_size);
+        }
 
         template <typename T>
         inline void readBuffered(std::vector<T>& buffer, size_t byte_count) {
