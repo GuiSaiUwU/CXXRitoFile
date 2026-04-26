@@ -48,8 +48,6 @@ namespace RitoFile {
                 int block_height = (curr_height + block_size - 1) / block_size;
 
                 std::uint32_t current_size = bytes_per_block  * block_width * block_height;
-                std::cout << std::format("Mipmap {}: {}x{}, block: {}x{}, size: {} bytes\n", mipmap_count - x, curr_width, curr_height, block_width, block_height, current_size);
-
                 reader.readBuffered(this->data.at(mipmap_count - x), current_size);
             }
         } else {
