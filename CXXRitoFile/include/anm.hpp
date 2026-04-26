@@ -29,12 +29,6 @@ namespace RitoFile {
 
 	class ANM {
 	public:
-		/*
-	    __slots__ = (
-		    'signature', 'version', 'file_size', 'format_token', 'flags1', 'flags2',
-			'duration', 'fps', 'error_metrics', 'tracks'
-		)
-		*/
 		std::string signature;
 		std::uint32_t version, file_size, format_token, flags1, flags2;
 		float duration, fps;
