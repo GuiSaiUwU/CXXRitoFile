@@ -22,6 +22,8 @@ target_include_directories(CXXRitoFile
             
 )
 
+target_compile_options(CXXRitoFile PRIVATE /wd4068 /W4 /WX)
+
 # Executables
 add_executable(TestRito "TestRito.cpp")
 target_link_libraries(TestRito PRIVATE CXXRitoFile)

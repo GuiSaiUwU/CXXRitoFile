@@ -13,5 +13,13 @@
         "*/.git/subtree-cache/**": true,
         "*/.hg/store/**": true,
         "CXXRitoFile/third-party/**": true
-    }
+    },
+    "C_Cpp.default.includePath": [
+        "CXXRitoFile/third-party/xxhash",
+        "CXXRitoFile/include",
+        "CXXRitoFile/third-party/gzip-hpp/include",
+        "CXXRitoFile/third-party/gzip-hpp/include/gzip",
+        "CXXRitoFile/third-party/zstd/lib",
+        "CXXRitoFile/third-party/zlib",
+    ]
 }
