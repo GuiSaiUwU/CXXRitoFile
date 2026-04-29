@@ -1,0 +1,17 @@
+{
+    "C_Cpp.files.exclude": {
+        "CXXRitoFile/third-party/**": true
+    },
+    "search.exclude": {
+        "CXXRitoFile/third-party/**": true
+    },
+    "files.watcherExclude": {
+        ".git/objects/**": true,
+        ".git/subtree-cache/**": true,
+        ".hg/store/**": true,
+        "*/.git/objects/**": true,
+        "*/.git/subtree-cache/**": true,
+        "*/.hg/store/**": true,
+        "CXXRitoFile/third-party/**": true
+    }
+}
