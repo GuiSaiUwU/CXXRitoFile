@@ -136,6 +136,10 @@ namespace RitoFile {
         void write(const std::vector<char>& data) {
             stream.write(data.data(), data.size());
         }
+        
+        void write_raw(const char* data, size_t length) {
+            stream.write(data, length);
+        }
 
         template<typename T>
         void writeScalar(T value) {
