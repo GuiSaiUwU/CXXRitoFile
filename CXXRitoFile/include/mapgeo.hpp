@@ -102,8 +102,8 @@ namespace RitoFile {
     };
 
     struct MAPGEOFormatInfo {
-        size_t byte_size;
-        size_t item_count;
+        std::uint32_t byte_size;
+        std::uint32_t item_count;
     };
 
     enum class MAPGEOVertexElementFormat : std::uint8_t {
@@ -174,7 +174,7 @@ namespace RitoFile {
             vertex_description_id, index_buffer_id,
             bucket_grid_hash;
         
-        std::vector<std::int32_t> vertex_buffer_ids;
+        std::vector<std::uint32_t> vertex_buffer_ids;
         std::vector<MAPGEOVertex> vertices;
         std::vector<std::uint16_t> indices;
         MAPGEOLayer layer;

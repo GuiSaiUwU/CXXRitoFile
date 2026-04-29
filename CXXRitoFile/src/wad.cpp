@@ -101,6 +101,7 @@ namespace RitoFile {
 		}
 	}
 
+	#pragma warning(suppress: 4100) // unreferenced formal parameter
 	void WAD::write(std::ostringstream& outp_file) {
 		throw std::runtime_error("Not implemented");
 	}

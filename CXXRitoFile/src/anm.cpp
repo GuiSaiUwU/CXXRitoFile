@@ -95,7 +95,7 @@ namespace RitoFile {
 				}
 
 				// Parse pose
-				float time = (((compressed_time / 65535.0) * max_time) * this->fps);
+				float time = (((compressed_time / 65535.0f) * max_time) * this->fps);
 
 				ANMPose* pose_ptr = nullptr;
 				if (found_track->poses.contains(time)) {
@@ -136,7 +136,7 @@ namespace RitoFile {
 				std::uint32_t frame_count = reader.readU32();
 
 				this->fps = 1 / reader.readF32();
-				this->duration = frame_count;
+				this->duration = static_cast<float>(frame_count);
 
 				// read offsets and calculate stuffs
 				/* joint_hashes_offset, _, _, vecs_offset, quats_offset, frames_offset = bs.read_i32(6)*/
@@ -192,7 +192,7 @@ namespace RitoFile {
 
 				// Read frames
 				reader.seek(frames_offset + 12);
-				for (std::uint32_t frame_idx = 0; frame_idx < frame_count; frame_idx++) {
+				for (float frame_idx = 0; frame_idx < frame_count; frame_idx++) {
 					for (ANMTrack& track : this->tracks) {
 						std::uint16_t translate_index = reader.readU16();
 						std::uint16_t scale_index = reader.readU16();
@@ -219,7 +219,7 @@ namespace RitoFile {
 				std::uint32_t frame_count = reader.readU32();
 
 				this->fps = 1 / reader.readF32() /*frame duration*/;
-				this->duration = frame_count;
+				this->duration = static_cast<float>(frame_count);
 
 				//Read offsets & calculate stuffs
                 /*_, _, _, vecs_offset, quats_offset, frames_offset = bs.read_i32(6)*/
@@ -298,7 +298,7 @@ namespace RitoFile {
 						pose.translate = vec_bank.at(translate_index);
 						pose.scale = vec_bank.at(scale_index);
 						pose.rotate = quat_bank.at(rotate_index);
-						target_track->poses[target_track->poses.size()] = pose;
+						target_track->poses[static_cast<float>(target_track->poses.size())] = pose;
 					}
 				}
 			}
@@ -308,8 +308,8 @@ namespace RitoFile {
 				reader.pad(4); // skl id
 				std::uint32_t track_count = reader.readU32();
 				std::uint32_t frame_count = reader.readU32();
-				this->fps = reader.readU32();
-				this->duration = frame_count;
+				this->fps = 1.0f / reader.readU32();
+				this->duration = static_cast<float>(frame_count);
 				
 				// Prepare tracks
 				this->tracks.resize(track_count);
@@ -326,7 +326,7 @@ namespace RitoFile {
 						// legacy dont support scale
 						pose.scale = Container3<float>{ 1.0f, 1.0f, 1.0f };
 
-						track.poses[frame_idx] = pose;
+						track.poses[static_cast<float>(frame_idx)] = pose;
 					}
 				}
 			}
@@ -376,9 +376,9 @@ namespace RitoFile {
 		}
 
 		return Container3<float>(
-			(max.x - min.x) / 65535.0 * (bytes[0] | bytes[1] << 8) + min.x,
-			(max.y - min.y) / 65535.0 * (bytes[2] | bytes[3] << 8) + min.y,
-			(max.z - min.z) / 65535.0 * (bytes[4] | bytes[5] << 8) + min.z
+			(max.x - min.x) / 65535.0f * (bytes[0] | bytes[1] << 8) + min.x,
+			(max.y - min.y) / 65535.0f * (bytes[2] | bytes[3] << 8) + min.y,
+			(max.z - min.z) / 65535.0f * (bytes[4] | bytes[5] << 8) + min.z
 		);
 	}
 

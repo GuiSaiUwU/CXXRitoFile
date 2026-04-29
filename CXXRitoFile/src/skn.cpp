@@ -143,7 +143,8 @@ namespace RitoFile {
 
 #pragma region SubmeshWrite
 
-		writer.writeU32(this->submeshes.size());
+		writer.writeU32(static_cast<std::uint32_t>(this->submeshes.size()));
+		
 		for (const auto& submesh : this->submeshes) {
 			writer.writeStringPadded(submesh.name, 64);
 			writer.writeU32(submesh.vertex_start);
@@ -159,8 +160,9 @@ namespace RitoFile {
 
 #pragma region ExtraInfoWrite
 		
-		writer.writeU32(this->indices.size());
-		writer.writeU32(this->vertices.size());
+		writer.writeU32(static_cast<std::uint32_t>(this->indices.size()));
+		writer.writeU32(static_cast<std::uint32_t>(this->vertices.size()));
+		
 		if (this->major >= 4) {
 			writer.writeU32(this->vertex_size);
 			writer.writeU32(this->vertex_type);
@@ -178,16 +180,16 @@ namespace RitoFile {
 			writer.writeU16(index);
 		}
 
-		for (const auto& vertices : this->vertices) {
-			writer.writeContainer<Container3, float, 3>(vertices.pos);
-			writer.writeContainer<Container4, std::uint8_t, 4>(vertices.influences);
-			writer.writeContainer<Container4, float, 4>(vertices.weights);
-			writer.writeContainer<Container3, float, 3>(vertices.normal);
-			writer.writeContainer<Container2, float, 2>(vertices.uv);
+		for (const auto& vertex : this->vertices) {
+			writer.writeContainer<Container3, float, 3>(vertex.pos);
+			writer.writeContainer<Container4, std::uint8_t, 4>(vertex.influences);
+			writer.writeContainer<Container4, float, 4>(vertex.weights);
+			writer.writeContainer<Container3, float, 3>(vertex.normal);
+			writer.writeContainer<Container2, float, 2>(vertex.uv);
 			if (this->vertex_type == SKNVertexType::COLOR || this->vertex_type == SKNVertexType::TANGENT) {
-				writer.writeContainer<Container4, std::uint8_t, 4>(vertices.color);
+				writer.writeContainer<Container4, std::uint8_t, 4>(vertex.color);
 				if (this->vertex_type == SKNVertexType::TANGENT) {
-					writer.writeContainer<Container4, float, 4>(vertices.tangent);
+					writer.writeContainer<Container4, float, 4>(vertex.tangent);
 				}
 			}
 		}

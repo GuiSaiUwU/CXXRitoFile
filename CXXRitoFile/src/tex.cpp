@@ -111,7 +111,7 @@ namespace RitoFile {
         if (this->has_mipmaps) {
             header.dwFlags |= 0x00020000;
             header.dwCaps |= 0x00400008;
-            header.dwMipMapCount = this->data.size(); // do we -1 because data also contains the main texture (?)
+            header.dwMipMapCount = static_cast<std::uint32_t>(this->data.size());
         }
 
         writer.writeString("DDS ");

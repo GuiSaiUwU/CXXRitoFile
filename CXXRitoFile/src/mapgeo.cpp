@@ -129,7 +129,7 @@ namespace RitoFile {
 			model.vertex_buffer_count = reader.readU32();
 			model.vertex_description_id = reader.readU32();
 
-			reader.readBuffered(model.vertex_buffer_ids, model.vertex_buffer_count * sizeof(std::int32_t));
+			reader.readBuffered(model.vertex_buffer_ids, model.vertex_buffer_count * sizeof(std::uint32_t));
 
 			model.vertices.clear();
 			model.vertices.resize(model.vertex_count);
@@ -137,9 +137,9 @@ namespace RitoFile {
 			// Read and cache each referenced vertex buffer
 			// This is so goofy wtf
 			for (std::size_t i = 0; i < model.vertex_buffer_ids.size(); i++) {
-				const std::int32_t vertex_buffer_id = model.vertex_buffer_ids[i];
+				const std::uint32_t vertex_buffer_id = model.vertex_buffer_ids[i];
 
-				if (vertex_buffer_id < 0 || vertex_buffer_id >= vertex_buffer_count) {
+				if (vertex_buffer_id >= vertex_buffer_count) {
 					continue;
 				}
 

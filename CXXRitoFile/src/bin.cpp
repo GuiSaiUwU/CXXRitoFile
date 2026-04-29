@@ -47,7 +47,7 @@ namespace RitoFile {
 		}
 
 		auto version = reader.readU32();
-		static std::array<int, 3> allowed_versions{(1, 2, 3)};
+		static std::array<std::uint32_t, 3> allowed_versions{{1, 2, 3}};
 		if (std::find(allowed_versions.begin(), allowed_versions.end(), version) == allowed_versions.end()) {
 			throw std::runtime_error(std::format("Version not supported: {}", version));
 		}
@@ -55,7 +55,7 @@ namespace RitoFile {
 		if (version >= 2) {
 			auto link_count = reader.readU32();
 			this->links.reserve(link_count);
-			for (auto _i = 0; _i < link_count; _i++) {
+			for (std::uint32_t _i = 0; _i < link_count; _i++) {
 				this->links.emplace_back(reader.readStringSized16());
 			}
 		}
@@ -88,6 +88,7 @@ namespace RitoFile {
 		}
 	}
 	
+    #pragma warning(suppress: 4100) // unreferenced formal parameter
 	void BIN::write(std::ostringstream& outp_file) {
 		throw std::runtime_error("Not implemented");
 	}
