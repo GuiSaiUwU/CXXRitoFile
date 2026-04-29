@@ -34,7 +34,7 @@ namespace RitoFile {
 		TEX(std::stringstream& inpt_file);
 		void read();
 		void write(std::ostringstream& outp_file);
-
+        void to_dds(std::ostringstream& outp_file);
     private:
         inline std::uint32_t mipmap_count() {
             std::uint32_t num = 0;
@@ -50,4 +50,35 @@ namespace RitoFile {
             return num;
         }
     };
+
+    /* https://github.com/tarngaina/LtMAO/blob/hai/src/LtMAO/Ritoddstex.py#L127 */
+    struct DDSPixelFormat {
+        std::uint32_t dwSize = 32;
+        std::uint32_t dwFlags = 0;
+        std::uint32_t dwFourCC = 0;
+        std::uint32_t dwRGBBitCount = 0;
+        std::uint32_t dwRBitMask = 0;
+        std::uint32_t dwGBitMask = 0;
+        std::uint32_t dwBBitMask = 0;
+        std::uint32_t dwABitMask = 0;
+    };
+
+    #pragma pack(push, 1)
+    struct DDSHeader {
+        std::uint32_t dwSize = 124;
+        std::uint32_t dwFlags = 0x00001007;
+        std::uint32_t dwHeight = 0;
+        std::uint32_t dwWidth = 0;
+        std::uint32_t dwPitchOrLinearSize = 0;
+        std::uint32_t dwDepth = 0;
+        std::uint32_t dwMipMapCount = 0;
+        std::uint32_t dwReserved1[11] = {0};
+        DDSPixelFormat ddspf;
+        std::uint32_t dwCaps = 0x00001000;
+        std::uint32_t dwCaps2 = 0;
+        std::uint32_t dwCaps3 = 0;
+        std::uint32_t dwCaps4 = 0;
+        std::uint32_t dwReserved2 = 0;
+    };
+    #pragma pack(pop)
 }

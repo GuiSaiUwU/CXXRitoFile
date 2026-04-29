@@ -75,4 +75,63 @@ namespace RitoFile {
             writer.write(this->data.at(0));
         }
     }
+
+    void TEX::to_dds(std::ostringstream& outp_file) {
+        BinaryWriter writer{ outp_file };
+
+        if (this->signature != 0x00584554) {
+            throw std::runtime_error("TEX Might not have been initialized (read) before converting to DDS");
+        }
+
+        DDSHeader header{};
+        header.dwHeight = this->height;
+        header.dwWidth = this->width;
+
+        // Pixel format things uwu
+        if (this->format == TEXFormat::DXT1) {
+            header.ddspf.dwFlags = 0x00000004;
+            header.ddspf.dwFourCC = 0x31545844;  // 'DXT1' as DWORD
+        }
+        else if (this->format == TEXFormat::DXT5) {
+            header.ddspf.dwFlags = 0x00000004;
+            header.ddspf.dwFourCC = 0x35545844;  // 'DXT5' as DWORD
+        }
+        else if (this->format == TEXFormat::BGRA8) {
+            header.ddspf.dwFlags = 0x00000041;
+            header.ddspf.dwRGBBitCount = 32;
+            header.ddspf.dwBBitMask = 0x000000ff;
+            header.ddspf.dwGBitMask = 0x0000ff00;
+            header.ddspf.dwRBitMask = 0x00ff0000;
+            header.ddspf.dwABitMask = 0xff000000;
+        }
+        else {
+            throw std::runtime_error("Unsupported TEX format while setting up pixel format");
+        }
+
+        if (this->has_mipmaps) {
+            header.dwFlags |= 0x00020000;
+            header.dwCaps |= 0x00400008;
+            header.dwMipMapCount = this->data.size(); // do we -1 because data also contains the main texture (?)
+        }
+
+        writer.writeString("DDS ");
+        {
+            std::vector<char> header_data(sizeof(DDSHeader));
+            std::memcpy(header_data.data(), &header, sizeof(DDSHeader));
+            writer.write(header_data);
+        }
+
+        if (this->has_mipmaps) {
+            // mipmap in tex file is reversed to dds file
+            for (auto it = this->data.rbegin(); it != this->data.rend(); ++it) {
+                writer.write_raw(it->data(), it->size());
+            }
+        } else {
+            if (this->data.empty()) {
+                throw std::runtime_error("TEX has no data to write to DDS");
+            }
+            
+            writer.write_raw(this->data[0].data(), this->data[0].size());
+        }
+    }
 }

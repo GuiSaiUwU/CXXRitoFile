@@ -228,6 +228,20 @@ void test_tex() {
 		std::cout << "Couldn't write file.\n";
 		return;
 	}
+
+	std::string dds_output_path = "C:\\Users\\GuiSai\\Desktop\\TestCRito\\test_tex_out.dds";
+	std::ofstream dds_outp_file{ dds_output_path, std::ios::binary };
+	if (dds_outp_file) {
+		std::ostringstream out_buffer;
+		tex_file.to_dds(out_buffer);
+		dds_outp_file.write(out_buffer.str().c_str(), out_buffer.str().size());
+		dds_outp_file.close();
+		std::cout << "DDS written successfully!\n";
+	}
+	else {
+		std::cout << "Couldn't write file.\n";
+		return;
+	}
 }
 
 
