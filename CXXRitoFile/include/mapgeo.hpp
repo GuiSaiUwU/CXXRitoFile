@@ -218,6 +218,7 @@ namespace RitoFile {
         BinaryReader reader;
         MAPGEO(std::stringstream& inpt_file);
         void read();
+        void write(std::ostringstream& outp_file, std::uint32_t version_to_write, bool is_float16 = false);
     };
 
     class MAPGEOVertexReader {

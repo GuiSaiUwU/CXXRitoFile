@@ -198,6 +198,12 @@ void test_mapgeo() {
 	RitoFile::MAPGEO mapgeo_file{ mapgeo_buffer };
 	mapgeo_file.read();
 	std::cout << std::format("MAPGEO Version: {}.\n", mapgeo_file.version);
+
+	std::cout << "Writing MAPGEO...\n";
+	std::ostringstream outp_file{};
+	mapgeo_file.write(outp_file, mapgeo_file.version, true);
+	std::ofstream out_file{ "C:\\Users\\GuiSai\\Desktop\\TestCRito\\base_a_out.mapgeo", std::ios::binary };
+	out_file.write(outp_file.str().c_str(), outp_file.str().size());
 }
 
 void test_tex() {
@@ -250,8 +256,8 @@ int main(int argc, char* argv[]) {
 	//test_wad();
 	//test_bin();
 	//test_anm();
-	//test_mapgeo();
-	test_tex();
+	test_mapgeo();
+	//test_tex();
 #endif
 
 #ifndef _DEBUG
